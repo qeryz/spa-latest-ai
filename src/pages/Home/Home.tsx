@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
-import { Intro } from "../../components/Intro";
+const Intro = lazy(() => import("../../components/Intro"));
+const GetStarted = lazy(() => import("../../components/GetStarted"));
+const ChatBox = lazy(() => import("../../components/ChatBox"));
+const AlienContainer = lazy(() => import("../../components/AlienContainer"));
 
-import { ChatBox } from "../../components/ChatBox";
 import { splitMessageIntoBubbles } from "../../utils/utils";
-import { AlienContainer } from "../../components/AlienContainer";
-import { GetStarted } from "../../components/GetStarted";
 import { fetchChatResponse } from "../../api/chat";
 
 function Home() {
@@ -60,22 +60,24 @@ function Home() {
 
   return (
     <div className="flex-col justify-center items-center px-50 py-20 relative min-h-screen">
-      {showIntro && (
-        <>
-          <Intro />
-          <GetStarted handleClick={setShowIntro} />
-        </>
-      )}
-      {!showIntro && (
-        <>
-          <ChatBox onSend={handleSend} loading={loading} />
-          <AlienContainer
-            bubbles={bubbles}
-            typing={typing}
-            currentText={currentText}
-          />
-        </>
-      )}
+      <Suspense fallback={<div>Loading...</div>}>
+        {showIntro && (
+          <>
+            <Intro />
+            <GetStarted handleClick={setShowIntro} />
+          </>
+        )}
+        {!showIntro && (
+          <>
+            <ChatBox onSend={handleSend} loading={loading} />
+            <AlienContainer
+              bubbles={bubbles}
+              typing={typing}
+              currentText={currentText}
+            />
+          </>
+        )}
+      </Suspense>
     </div>
   );
 }
