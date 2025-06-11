@@ -3,27 +3,10 @@ import { useState } from "react";
 import { Intro } from "../../components/Intro";
 
 import { ChatBox } from "../../components/ChatBox";
-import { splitMessageIntoBubbles } from "../../components/utils";
+import { splitMessageIntoBubbles } from "../../utils/utils";
 import { AlienContainer } from "../../components/AlienContainer";
 import { GetStarted } from "../../components/GetStarted";
-
-async function fetchChatResponse(message: string): Promise<string> {
-  try {
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message }),
-    });
-    const data = await response.json();
-    if (response.ok && data.result) {
-      return data.result;
-    } else {
-      return "Sorry, I couldn't process that request.";
-    }
-  } catch (error) {
-    return "An error occurred while fetching the response.";
-  }
-}
+import { fetchChatResponse } from "../../api/chat";
 
 function Home() {
   const [showIntro, setShowIntro] = useState(true);

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
-import { ALIEN_ANIMATION_MAP } from "./utils";
+import { ALIEN_ANIMATION_MAP } from "../utils/utils";
 
 export const Alien = ({ action = "idle" }: { action: string }) => {
   const [debouncedAction, setDebouncedAction] = useState(action);
