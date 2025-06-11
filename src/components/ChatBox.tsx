@@ -7,7 +7,7 @@ interface ChatBoxProps {
   loading: boolean;
 }
 
-export function ChatBox({ onSend, loading }: ChatBoxProps) {
+const ChatBox = ({ onSend, loading }: ChatBoxProps) => {
   const [input, setInput] = useState("");
   const [dots, setDots] = useState(".");
 
@@ -74,4 +74,6 @@ export function ChatBox({ onSend, loading }: ChatBoxProps) {
       </AnimatePresence>
     </form>
   );
-}
+};
+
+export default ChatBox;

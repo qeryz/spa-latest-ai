@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-export const GetStarted = ({
+const GetStarted = ({
   handleClick,
 }: {
   handleClick: (arg0: boolean) => void;
@@ -17,3 +17,5 @@ export const GetStarted = ({
     </motion.button>
   );
 };
+
+export default GetStarted;

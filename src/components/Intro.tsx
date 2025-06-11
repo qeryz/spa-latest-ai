@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-export const Intro = () => {
+const Intro = () => {
   return (
     <>
       <motion.h1
@@ -27,3 +27,5 @@ export const Intro = () => {
     </>
   );
 };
+
+export default Intro;

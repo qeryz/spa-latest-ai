@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { ALIEN_ANIMATION_MAP } from "../utils/utils";
 
-export const Alien = ({ action = "idle" }: { action: string }) => {
+const Alien = ({ action = "idle" }: { action: string }) => {
   const [debouncedAction, setDebouncedAction] = useState(action);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -47,3 +47,5 @@ export const Alien = ({ action = "idle" }: { action: string }) => {
     />
   );
 };
+
+export default Alien;

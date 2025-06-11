@@ -2,14 +2,14 @@ import { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { motion } from "framer-motion";
-import { Alien } from "../components/Alien";
+import Alien from "../components/Alien";
 
 type Bubble = {
   id: number;
   text: string;
 };
 
-export const AlienContainer = ({
+const AlienContainer = ({
   bubbles,
   typing,
   currentText,
@@ -87,3 +87,5 @@ export const AlienContainer = ({
     </motion.div>
   );
 };
+
+export default AlienContainer;
