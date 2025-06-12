@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Intro = lazy(() => import("../../components/Intro"));
 const GetStarted = lazy(() => import("../../components/GetStarted"));
@@ -62,16 +63,31 @@ function Home() {
   return (
     <div className="flex-col justify-center items-center px-5 py-5 sm:px-50 sm:py-20 relative min-h-screen">
       <Suspense fallback={<ColorfulSpinner />}>
-        {showIntro ? (
-          <>
-            <Intro />
-            <GetStarted handleClick={setShowIntro} />
-          </>
-        ) : (
-          <>
-            <ChatBox onSend={handleSend} loading={loading} />
-          </>
-        )}
+        <AnimatePresence mode="wait">
+          {showIntro ? (
+            <>
+              <motion.div
+                key="intro"
+                exit={{ opacity: 0, y: -10, filter: "blur(8px)" }}
+              >
+                <Intro />
+              </motion.div>
+              <motion.div
+                key="getstarted"
+                exit={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+              >
+                <GetStarted handleClick={setShowIntro} />
+              </motion.div>
+            </>
+          ) : (
+            <motion.div
+              key="chatbox"
+              exit={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+            >
+              <ChatBox onSend={handleSend} loading={loading} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Suspense>
       {/* AlienContainer is rendered outside Suspense to prevent
       losing WebGL context and subsequent crashing */}
