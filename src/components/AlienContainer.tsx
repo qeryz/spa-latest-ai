@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { motion } from "framer-motion";
-import Alien from "../components/Alien";
+import Alien from "./Alien";
 
 type Bubble = {
   id: number;
