@@ -39,9 +39,9 @@ const ChatBox = ({ onSend, loading }: ChatBoxProps) => {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: 1.2 }}
+        transition={{ duration: 0.8 }}
         type="text"
-        className="flex-1 bg-slate-100 border-1 border-gray-300 focus:outline-none rounded px-3 py-2 text-gray-800 text-sm"
+        className="flex-1 bg-slate-100 border-[0.5px] border-gray-300 focus:outline-none rounded-2xl px-3 py-2 text-gray-800 text-sm"
         placeholder="Ask the alien anything..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
@@ -58,7 +58,7 @@ const ChatBox = ({ onSend, loading }: ChatBoxProps) => {
             type="submit"
             className={`${
               loading ? "bg-gray-400" : "bg-blue-600"
-            } text-white px-4 py-1 rounded-2xl disabled:opacity-50 font-semibold flex items-center min-w-[54px]`}
+            } text-white px-4 py-1 rounded-2xl disabled:opacity-50 font-semibold flex items-center min-w-[54px] cursor-pointer`}
             disabled={loading || !input.trim()}
           >
             {loading ? dots : "Send"}
@@ -66,7 +66,7 @@ const ChatBox = ({ onSend, loading }: ChatBoxProps) => {
               <img
                 src={SendIcon}
                 alt="Send"
-                className="inline-block ml-2 w-5 h-5"
+                className="inline-block ml-2 w-4 h-4"
               />
             )}
           </motion.button>
