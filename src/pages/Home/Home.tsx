@@ -3,10 +3,11 @@ import { lazy, Suspense, useState } from "react";
 const Intro = lazy(() => import("../../components/Intro"));
 const GetStarted = lazy(() => import("../../components/GetStarted"));
 const ChatBox = lazy(() => import("../../components/ChatBox"));
-const AlienContainer = lazy(() => import("../../components/AlienContainer"));
+import AlienContainer from "../../components/AlienContainer";
 
 import { splitMessageIntoBubbles } from "../../utils/utils";
 import { fetchChatResponse } from "../../api/chat";
+import ColorfulSpinner from "../../components/Spinner";
 
 function Home() {
   const [showIntro, setShowIntro] = useState(true);
@@ -59,25 +60,28 @@ function Home() {
   };
 
   return (
-    <div className="flex-col justify-center items-center px-50 py-20 relative min-h-screen">
-      <Suspense fallback={<div>Loading...</div>}>
-        {showIntro && (
+    <div className="flex-col justify-center items-center px-5 py-5 sm:px-50 sm:py-20 relative min-h-screen">
+      <Suspense fallback={<ColorfulSpinner />}>
+        {showIntro ? (
           <>
             <Intro />
             <GetStarted handleClick={setShowIntro} />
           </>
-        )}
-        {!showIntro && (
+        ) : (
           <>
             <ChatBox onSend={handleSend} loading={loading} />
-            <AlienContainer
-              bubbles={bubbles}
-              typing={typing}
-              currentText={currentText}
-            />
           </>
         )}
       </Suspense>
+      {/* AlienContainer is rendered outside Suspense to prevent
+      losing WebGL context and subsequent crashing */}
+      {!showIntro && (
+        <AlienContainer
+          bubbles={bubbles}
+          typing={typing}
+          currentText={currentText}
+        />
+      )}
     </div>
   );
 }
