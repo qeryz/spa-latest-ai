@@ -17,6 +17,14 @@ function Home() {
   const [typing, setTyping] = useState(false);
   const [currentText, setCurrentText] = useState("");
 
+  const initialMessage =
+    "Hi, ask me anything about the city you're planning on moving to!";
+
+  const handleGetStarted = () => {
+    setShowIntro(false);
+    showBubblesSequentially([initialMessage]);
+  };
+
   // Helper: Typing animation for a single bubble
   const typeBubble = (text: string, cb: () => void) => {
     setCurrentText("");
@@ -73,10 +81,29 @@ function Home() {
                 <Intro />
               </motion.div>
               <motion.div
+                key="spacer"
+                exit={{ opacity: 0, x: -10, filter: "blur(8px)" }}
+              >
+                <motion.img
+                  src="/strands.svg"
+                  alt="Banner"
+                  className="absolute top-15 left-0 w-full h-full object-cover rounded-lg"
+                  initial={{
+                    clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)",
+                    filter: "blur(20px)",
+                  }}
+                  animate={{
+                    clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+                    filter: "blur(0px)",
+                  }}
+                  transition={{ duration: 1.4, delay: 1.5 }}
+                />
+              </motion.div>
+              <motion.div
                 key="getstarted"
                 exit={{ opacity: 0, y: 10, filter: "blur(8px)" }}
               >
-                <GetStarted handleClick={setShowIntro} />
+                <GetStarted handleClick={handleGetStarted} />
               </motion.div>
             </>
           ) : (
