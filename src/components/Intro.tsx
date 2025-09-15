@@ -18,11 +18,11 @@ const Intro = () => {
         transition={{ duration: 1.4, delay: 0.3 }}
       >
         <p>
-          A highly intelligent extra-terrestrial being with a vast knowledge of
-          the universe who has traveled across galaxies to share wisdom and
-          insights with those seeking enlightenment. This guru possesses a
-          unique perspective
+          Zorg is a highly intelligent extra-terrestrial being with a vast
+          knowledge of the universe who has traveled across galaxies to share
+          wisdom and insights with those seeking enlightenment.
         </p>
+        <p>Ready to seek guidance on your next residential move?</p>
       </motion.div>
     </>
   );
