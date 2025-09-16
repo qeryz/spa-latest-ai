@@ -121,7 +121,7 @@ const ChatBox = ({
         </form>
         {showSuggestions && suggestions.length > 0 && (
           <ul className="absolute z-10 left-0 right-0 bg-white border border-gray-200 rounded-xl mt-2 shadow-lg max-h-60 overflow-y-auto animate-fade-in">
-            {suggestions.map((s, idx) => (
+            {suggestions.map((s) => (
               <li
                 key={s.place_id}
                 className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-blue-50 transition"
