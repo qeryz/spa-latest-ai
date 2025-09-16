@@ -1,54 +1,15 @@
-# React + TypeScript + Vite
+# AI Relocation Assistant: An Agentic Chatbot for Relocation Advice
+This is a full-stack, AI-powered chatbot designed to help users make informed decisions about new neighborhoods. By leveraging a multi-agent system, it autonomously researches, analyzes, and summarizes real-world data to provide personalized, conversational advice on any U.S. location.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<img width="591" height="450" alt="image" src="https://github.com/user-attachments/assets/7f94141f-e321-4164-b8ca-be95340ef1bc" />
 
-Currently, two official plugins are available:
+## Key Features
+- Autonomous Agentic Flows: The core of the system is an agentic architecture that goes beyond simple API calls. The AI agent can perform a series of actions—like fetching Points of Interest (POIs) and reviews from Google Maps—to complete complex tasks and fulfill user requests.
+- Context-Aware Conversation: The chatbot retains multi-turn context, allowing for natural, follow-up questions and a personalized conversational experience.
+- Dynamic Data Analysis: It gathers real-world data (Google Maps POIs, user reviews) and summarizes it into concise, actionable advice using OpenAI's GPT models.
+- 3D Interface: The conversational interface is presented with a 3D Avatar powered by Three.js, offering an engaging and modern user experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Tech Stack
+- Frontend: React, Three.js (for 3D), Framer Motion (for animations), TailwindCSS
+- Backend:	Node.js, Express.js
+- APIs:	OpenAI API (GPT-4), Google Maps API (Places)
