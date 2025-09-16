@@ -1,5 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export const typeBubble = (
   text: string,
@@ -44,7 +45,7 @@ export const showBubblesSequentially = async (
 
 export async function fetchPOIs(lat: number, lng: number) {
   try {
-    const response = await axios.post("/api/pois", { lat, lng });
+    const response = await axios.post(`${apiUrl}/api/pois`, { lat, lng });
     return response.data.pois;
   } catch (err) {
     console.error("Failed to fetch POIs:", err);
