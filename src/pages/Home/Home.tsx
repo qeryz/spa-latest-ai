@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import axios from "axios";
+import { showBubblesSequentially, fetchPOIs } from "../../utils/agentHelpers";
 
 const Intro = lazy(() => import("../../components/Intro"));
 const GetStarted = lazy(() => import("../../components/GetStarted"));
@@ -11,17 +11,6 @@ import { splitMessageIntoBubbles } from "../../utils/utils";
 import { fetchChatResponse } from "../../api/chat";
 import ColorfulSpinner from "../../components/Spinner";
 
-// Replace fetchPOIs with a real backend call
-async function fetchPOIs(lat: number, lng: number) {
-  try {
-    const response = await axios.post("/api/pois", { lat, lng });
-    return response.data.pois;
-  } catch (err) {
-    console.error("Failed to fetch POIs:", err);
-    return [];
-  }
-}
-
 function Home() {
   const [showIntro, setShowIntro] = useState(true);
   const [bubbles, setBubbles] = useState<{ id: number; text: string }[]>([]);
@@ -29,8 +18,6 @@ function Home() {
   const [typing, setTyping] = useState(false);
   const [currentText, setCurrentText] = useState("");
   const [showLocationInput, setShowLocationInput] = useState(true);
-  const [selectedPlace, setSelectedPlace] = useState<any>(null);
-  const [locationSelected, setLocationSelected] = useState(false);
   const [poiData, setPoiData] = useState<any[]>([]);
 
   const initialMessage =
@@ -38,53 +25,25 @@ function Home() {
 
   const handleGetStarted = () => {
     setShowIntro(false);
-    showBubblesSequentially([initialMessage]);
-  };
-
-  // Helper: Typing animation for a single bubble
-  const typeBubble = (text: string, cb: () => void) => {
-    setCurrentText("");
-    let i = 0;
-    setTyping(true);
-    const interval = setInterval(() => {
-      setCurrentText(text.slice(0, i + 1));
-      i++;
-      if (i === text.length) {
-        clearInterval(interval);
-        setTyping(false);
-        cb();
-      }
-    }, 20); // Typing speed (ms per character)
-  };
-
-  // Show bubbles one by one with typing animation
-  const showBubblesSequentially = async (bubblesArr: string[]) => {
-    setBubbles([]);
-    for (let i = 0; i < bubblesArr.length; i++) {
-      await new Promise<void>((resolve) => {
-        typeBubble(bubblesArr[i], () => {
-          setBubbles((prev) => [
-            ...prev,
-            { id: Date.now() + Math.random(), text: bubblesArr[i] },
-          ]);
-          setCurrentText("");
-          setTimeout(resolve, 500);
-        });
-      });
-    }
+    showBubblesSequentially(
+      [initialMessage],
+      setBubbles,
+      setCurrentText,
+      setTyping
+    );
   };
 
   // Handler for when a location is selected from autocomplete
   const handleLocationSelect = async (place: any) => {
-    setSelectedPlace(place);
-    setLocationSelected(true);
     setShowLocationInput(false);
     setBubbles([]);
     setCurrentText("");
-    showBubblesSequentially([
-      `You selected: ${place.formatted_address}`,
-      "Analyzing the area... (fetching points of interest)",
-    ]);
+    showBubblesSequentially(
+      [`You selected: ${place.formatted_address}`, "Analyzing the area..."],
+      setBubbles,
+      setCurrentText,
+      setTyping
+    );
     setLoading(true);
     // Get lat/lng from place geometry
     const lat = place.geometry?.location?.lat();
@@ -102,11 +61,19 @@ function Home() {
       )}\n\nPlease provide a brief, well-rounded summary of why or why not this is a good place to move to, using the data above.`;
       const reply = await fetchChatResponse(summaryPrompt);
       const splitBubbles = splitMessageIntoBubbles(reply);
-      await showBubblesSequentially(splitBubbles);
+      await showBubblesSequentially(
+        splitBubbles,
+        setBubbles,
+        setCurrentText,
+        setTyping
+      );
     } else {
-      showBubblesSequentially([
-        "Could not get location details. Please try again.",
-      ]);
+      showBubblesSequentially(
+        ["Could not get location details. Please try again."],
+        setBubbles,
+        setCurrentText,
+        setTyping
+      );
     }
     setLoading(false);
   };
@@ -125,7 +92,12 @@ function Home() {
       : msg;
     const reply = await fetchChatResponse(prompt);
     const splitBubbles = splitMessageIntoBubbles(reply);
-    await showBubblesSequentially(splitBubbles);
+    await showBubblesSequentially(
+      splitBubbles,
+      setBubbles,
+      setCurrentText,
+      setTyping
+    );
     setLoading(false);
   };
 
