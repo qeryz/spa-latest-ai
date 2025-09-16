@@ -21,7 +21,7 @@ function Home() {
   const [poiData, setPoiData] = useState<any[]>([]);
 
   const initialMessage =
-    "Hello, Earthling! I'm Zog from the planet Xebulon. Let's start off by entering the location you wish to move to.";
+    "Hello, Earthling! I'm Zorg from the planet Xebulon. Let's start off by entering the location you wish to move to.";
 
   const handleGetStarted = () => {
     setShowIntro(false);
