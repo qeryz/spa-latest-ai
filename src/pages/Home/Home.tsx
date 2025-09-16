@@ -1,5 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import axios from "axios";
 
 const Intro = lazy(() => import("../../components/Intro"));
 const GetStarted = lazy(() => import("../../components/GetStarted"));
@@ -10,15 +11,30 @@ import { splitMessageIntoBubbles } from "../../utils/utils";
 import { fetchChatResponse } from "../../api/chat";
 import ColorfulSpinner from "../../components/Spinner";
 
+// Replace fetchPOIs with a real backend call
+async function fetchPOIs(lat: number, lng: number) {
+  try {
+    const response = await axios.post("/api/pois", { lat, lng });
+    return response.data.pois;
+  } catch (err) {
+    console.error("Failed to fetch POIs:", err);
+    return [];
+  }
+}
+
 function Home() {
   const [showIntro, setShowIntro] = useState(true);
   const [bubbles, setBubbles] = useState<{ id: number; text: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [typing, setTyping] = useState(false);
   const [currentText, setCurrentText] = useState("");
+  const [showLocationInput, setShowLocationInput] = useState(true);
+  const [selectedPlace, setSelectedPlace] = useState<any>(null);
+  const [locationSelected, setLocationSelected] = useState(false);
+  const [poiData, setPoiData] = useState<any[]>([]);
 
   const initialMessage =
-    "Hi, ask me anything about the city you're planning on moving to!";
+    "Hello, Earthling! I'm Zog from the planet Xebulon. Let's start off by entering the location you wish to move to.";
 
   const handleGetStarted = () => {
     setShowIntro(false);
@@ -58,11 +74,56 @@ function Home() {
     }
   };
 
+  // Handler for when a location is selected from autocomplete
+  const handleLocationSelect = async (place: any) => {
+    setSelectedPlace(place);
+    setLocationSelected(true);
+    setShowLocationInput(false);
+    setBubbles([]);
+    setCurrentText("");
+    showBubblesSequentially([
+      `You selected: ${place.formatted_address}`,
+      "Analyzing the area... (fetching points of interest)",
+    ]);
+    setLoading(true);
+    // Get lat/lng from place geometry
+    const lat = place.geometry?.location?.lat();
+    const lng = place.geometry?.location?.lng();
+    if (lat && lng) {
+      const pois = await fetchPOIs(lat, lng);
+      setPoiData(pois); // Store POIs for future questions
+      // Send POIs to GPT for summary
+      const summaryPrompt = `Here is data about points of interest near ${
+        place.formatted_address
+      }:\n${JSON.stringify(
+        pois,
+        null,
+        2
+      )}\n\nPlease provide a brief, well-rounded summary of why or why not this is a good place to move to, using the data above.`;
+      const reply = await fetchChatResponse(summaryPrompt);
+      const splitBubbles = splitMessageIntoBubbles(reply);
+      await showBubblesSequentially(splitBubbles);
+    } else {
+      showBubblesSequentially([
+        "Could not get location details. Please try again.",
+      ]);
+    }
+    setLoading(false);
+  };
+
   const handleSend = async (msg: string) => {
     setLoading(true);
     setBubbles([]);
     setCurrentText("");
-    const reply = await fetchChatResponse(msg);
+    // Always include POI data in the prompt if available
+    const prompt = poiData.length
+      ? `User question: ${msg}\n\nHere is data about points of interest near the user's chosen location:\n${JSON.stringify(
+          poiData,
+          null,
+          2
+        )}\n\nUse the data above to answer the user's question as specifically as possible.`
+      : msg;
+    const reply = await fetchChatResponse(prompt);
     const splitBubbles = splitMessageIntoBubbles(reply);
     await showBubblesSequentially(splitBubbles);
     setLoading(false);
@@ -111,7 +172,12 @@ function Home() {
               key="chatbox"
               exit={{ opacity: 0, y: 10, filter: "blur(8px)" }}
             >
-              <ChatBox onSend={handleSend} loading={loading} />
+              <ChatBox
+                onSend={handleSend}
+                loading={loading}
+                showLocationInput={showLocationInput}
+                onLocationSelect={handleLocationSelect}
+              />
             </motion.div>
           )}
         </AnimatePresence>
