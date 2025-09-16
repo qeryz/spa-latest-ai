@@ -1,4 +1,5 @@
 # AI Relocation Assistant: An Agentic Chatbot for Relocation Advice
+### [Live Demo](https://3daichatbot.netlify.app/)
 This is a full-stack, AI-powered chatbot designed to help users make informed decisions about new neighborhoods. By leveraging a multi-agent system, it autonomously researches, analyzes, and summarizes real-world data to provide personalized, conversational advice on any U.S. location.
 
 <img width="591" height="450" alt="image" src="https://github.com/user-attachments/assets/7f94141f-e321-4164-b8ca-be95340ef1bc" />
