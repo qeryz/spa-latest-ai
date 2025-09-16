@@ -13,7 +13,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://127.0.0.1:5173",
-      process.env.ALLOWED_ORIGIN, // Optionally set a deployed FE origin in .env
+      process.env.ALLOWED_ORIGIN,
     ],
     credentials: true,
   })
