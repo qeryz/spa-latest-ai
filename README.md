@@ -3,7 +3,7 @@
 
 An intelligent, full-stack chatbot that helps users research neighborhoods using **OpenAI Function Calling** and **dynamic tool orchestration**. Unlike traditional chatbots that rely on static data, this agent autonomously decides what information to fetch, when to fetch it, and how to synthesize it into actionable advice.
 
-<img width="591" height="450" alt="image" src="https://github.com/user-attachments/assets/7f94141f-e321-4164-b8ca-be95340ef1bc" />
+<img width="591" height="450" alt="image" src="https://github.com/user-attachments/assets/8e5fd364-8a79-4913-8708-d76b664337f2" />
 
 ## What Makes This "Agentic"?
 
