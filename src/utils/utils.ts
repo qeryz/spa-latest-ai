@@ -9,24 +9,37 @@ export const ALIEN_ANIMATION_MAP: Record<string, string> = {
   think: "/Animation_Alert_withSkin.glb",
 };
 
-const MAX_WORDS = 30;
+const MAX_WORDS = 50;
 
 export const splitMessageIntoBubbles = (message: string) => {
-  const sentences = message.split(/(?<=\.)\s+/); // Split at period+space
+  // First, split by newlines to preserve logical blocks (paragraphs, list items)
+  const lines = message.split(/\n/);
   const bubbles: string[] = [];
-  let current = "";
 
-  for (const sentence of sentences) {
-    const currentWords = current.split(/\s+/).filter(Boolean).length;
-    const sentenceWords = sentence.split(/\s+/).filter(Boolean).length;
+  for (const line of lines) {
+    const trimmedLine = line.trim();
+    if (!trimmedLine) continue;
 
-    if (currentWords + sentenceWords <= MAX_WORDS) {
-      current += (current ? " " : "") + sentence;
+    // If the line is short enough, keep it as one bubble
+    if (trimmedLine.split(/\s+/).length <= MAX_WORDS) {
+      bubbles.push(trimmedLine);
     } else {
+      // If line is too long, split by sentences
+      const sentences = trimmedLine.split(/(?<=\.)\s+/);
+      let current = "";
+      for (const sentence of sentences) {
+        const currentWords = current.split(/\s+/).filter(Boolean).length;
+        const sentenceWords = sentence.split(/\s+/).filter(Boolean).length;
+
+        if (currentWords + sentenceWords <= MAX_WORDS) {
+          current += (current ? " " : "") + sentence;
+        } else {
+          if (current) bubbles.push(current.trim());
+          current = sentence;
+        }
+      }
       if (current) bubbles.push(current.trim());
-      current = sentence;
     }
   }
-  if (current) bubbles.push(current.trim());
   return bubbles;
 };
