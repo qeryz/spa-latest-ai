@@ -66,7 +66,7 @@ const AlienContainer = ({
         {bubbles.map((bubble) => (
           <motion.div
             key={bubble.id}
-            className="bg-white/90 rounded-xl px-4 py-2 shadow-lg border border-gray-200 text-black text-base font-medium mb-2"
+            className="bg-white/90 rounded-xl px-4 py-2 shadow-lg border border-gray-200 text-black text-base font-medium mb-2 whitespace-pre-wrap"
           >
             {bubble.text}
           </motion.div>
