@@ -93,7 +93,8 @@ The agent decides when and how to use tools without hardcoded logic:
 - [ ] Add comparison mode (e.g., "Compare Berkeley vs Oakland")
 - [ ] Support international locations beyond the U.S.
 - [ ] Add voice input/output for hands-free interaction
-
+- [ ] Include more animations to our 3D agent!
+      
 ---
 
 ## Getting Started
