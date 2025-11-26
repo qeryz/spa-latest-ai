@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { showBubblesSequentially, fetchPOIs } from "../../utils/agentHelpers";
+import { showBubblesSequentially } from "../../utils/agentHelpers";
 
 const Intro = lazy(() => import("../../components/Intro"));
 const GetStarted = lazy(() => import("../../components/GetStarted"));
@@ -18,7 +18,11 @@ function Home() {
   const [typing, setTyping] = useState(false);
   const [currentText, setCurrentText] = useState("");
   const [showLocationInput, setShowLocationInput] = useState(true);
-  const [poiData, setPoiData] = useState<any[]>([]);
+  const [currentLocation, setCurrentLocation] = useState<{
+    lat: number;
+    lng: number;
+    address: string;
+  } | null>(null);
 
   const initialMessage =
     "Hello, Earthling! I'm Zorg from the planet Xebulon. Let's start off by entering the location you wish to move to.";
@@ -49,18 +53,17 @@ function Home() {
     const lat = place.geometry?.location?.lat();
     const lng = place.geometry?.location?.lng();
     if (lat && lng) {
-      const pois = await fetchPOIs(lat, lng);
-      setPoiData(pois); // Store POIs for future questions
-      // Send POIs to GPT for summary
-      const summaryPrompt = `Here is data about points of interest near ${
-        place.formatted_address
-      }:\n${JSON.stringify(
-        pois,
-        null,
-        2
-      )}\n\nPlease provide a brief, well-rounded summary of why or why not this is a good place to move to, using the data above.`;
-      const reply = await fetchChatResponse(summaryPrompt);
-      const splitBubbles = splitMessageIntoBubbles(reply);
+      const newLocation = {
+        lat,
+        lng,
+        address: place.formatted_address,
+      };
+      setCurrentLocation(newLocation);
+      
+      const summaryPrompt = `I am considering moving to ${place.formatted_address}. Please analyze this location for me.`;
+      const response = await fetchChatResponse(summaryPrompt, newLocation);
+      
+      const splitBubbles = splitMessageIntoBubbles(response.result);
       await showBubblesSequentially(
         splitBubbles,
         setBubbles,
@@ -82,16 +85,20 @@ function Home() {
     setLoading(true);
     setBubbles([]);
     setCurrentText("");
-    // Always include POI data in the prompt if available
-    const prompt = poiData.length
-      ? `User question: ${msg}\n\nHere is data about points of interest near the user's chosen location:\n${JSON.stringify(
-          poiData,
-          null,
-          2
-        )}\n\nUse the data above to answer the user's question as specifically as possible.`
-      : msg;
-    const reply = await fetchChatResponse(prompt);
-    const splitBubbles = splitMessageIntoBubbles(reply);
+    
+    // Pass the message and current location context
+    const response = await fetchChatResponse(msg, currentLocation || undefined);
+    
+    // If the agent switched to a new location, update our state
+    if (response.newLocation) {
+      setCurrentLocation({
+        lat: response.newLocation.lat,
+        lng: response.newLocation.lng,
+        address: response.newLocation.formatted_address,
+      });
+    }
+    
+    const splitBubbles = splitMessageIntoBubbles(response.result);
     await showBubblesSequentially(
       splitBubbles,
       setBubbles,
