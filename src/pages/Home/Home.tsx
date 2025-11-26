@@ -43,7 +43,7 @@ function Home() {
     setBubbles([]);
     setCurrentText("");
     showBubblesSequentially(
-      [`You selected: ${place.formatted_address}`, "Analyzing the area..."],
+      [`Ah, ${place.formatted_address}`, "One second while I ponder..."],
       setBubbles,
       setCurrentText,
       setTyping
