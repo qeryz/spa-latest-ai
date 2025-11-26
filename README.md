@@ -7,7 +7,7 @@ An intelligent, full-stack chatbot that helps users research neighborhoods using
 
 ## What Makes This "Agentic"?
 
-This isn't just a chatbot—it's an **autonomous agent** that:
+This isn't just a chatbot it's an autonomous agent that:
 - **Plans its own actions**: Decides which tools to call based on user intent
 - **Handles context switching**: Automatically tracks location changes across multi-turn conversations
 - **Executes multi-step workflows**: Geocodes locations → Searches for POIs → Synthesizes data → Responds naturally
